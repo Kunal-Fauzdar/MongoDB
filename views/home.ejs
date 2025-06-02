@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Application</title>
+    <style>
+        .chat{
+            width: 400px;
+            background-color: rgb(230, 241, 251);
+            box-shadow: 3px 2px 10px black;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+        .chat:hover{
+            box-shadow: 6px 5px 15px black;
+        }
+        .from{
+            padding:5px;
+            left:5px;
+            color:black;
+            font-style: italic;
+        }
+        .to{
+            padding:5px;
+            left:5px;
+            color:black;
+            font-style: italic;
+        }
+        .message{
+            margin-left: 20px;
+            background-color:deepskyblue;
+            color:aliceblue;
+            width:350px;
+            border-radius: 15px;
+            padding:5px;
+        }
+        p{
+            margin-left: 20px;
+        }
+        button{
+            background-color: cornflowerblue;
+            color:aliceblue;
+            border-radius: 10px;
+            padding:7px;
+            font-size:20px;
+            display:inline-block;
+            margin-left: 20px;
+
+        }
+    </style>
+</head>
+<body>
+    <h2>All Chats !! </h2>
+    <form method="get" action="/chats/new">
+        <button type ="submit">create chat</button>
+    </form>
+    <% for(let chat of chats){ %>
+        <div class="chat">
+            <p class="from">From : <%= chat.from %> </p>
+            <div class="message">
+                <p><%= chat.message %></p>
+            </div>
+            <p class="to">to : <%= chat.to %> </p>
+            <form action="/chats/<%= chat.id %>/edit">
+                <button>edit</button>
+            </form>
+            <hr>
+            <p><%= chat.created_at.toString().split(" ")[4] %></p>
+            <p><%= chat.created_at.toString().split(" ").slice(0,4).join("-") %></p>
+        </div>
+    <% } %>
+</body>
+</html>
