@@ -66,10 +66,23 @@
             <form action="/chats/<%= chat.id %>/edit">
                 <button>edit</button>
             </form>
+            <form id = "deleteForm" method = "POST" action="/chats/<%= chat.id %>?_method=DELETE">
+                <button >Delete</button>
+            </form>
             <hr>
             <p><%= chat.created_at.toString().split(" ")[4] %></p>
             <p><%= chat.created_at.toString().split(" ").slice(0,4).join("-") %></p>
         </div>
     <% } %>
+    <script>
+        document.getElementById("deleteForm").addEventListener("submit",(e)=>{
+            let confirmed = confirm("Are you sure you want to delete ?");
+            if(confirmed){
+
+            }else{
+                e.preventDefault();
+            }
+        })
+    </script>
 </body>
 </html>
