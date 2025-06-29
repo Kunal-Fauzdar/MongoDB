@@ -44,20 +44,26 @@ app.get('/chats/new',(req,res)=>{
     res.render("new.ejs");
 });
 
-app.get('/chats/:id',async(req,res,next)=>{
-    try{
-            let {id} = req.params;
-        let chat =await Chat.findById(id);
-        console.log(chat)
-        if(!chat){
-            next(new ExpressError(404,"Chat not Found"));
-        }
-        res.render('edit.ejs',{chat});
-    }catch(err){
-        next(err);  
+//wrapAsync Function
+//Alternative for try and catch 
+function wrapAsync(fn){
+    return function(req,res,next){
+        fn(req,res,next).catch((err)=>next(err));
     }
+}
+
+app.get('/chats/:id',wrapAsync(async(req,res,next)=>{
+   
+    let {id} = req.params;
+    let chat =await Chat.findById(id);
+    console.log(chat)
+    if(!chat){
+        next(new ExpressError(404,"Chat not Found"));
+    }
+    res.render('edit.ejs',{chat});
     
-});
+    
+}));
 
 app.post('/chats/upload',async(req,res,next)=>{
     try{
@@ -109,6 +115,18 @@ app.delete("/chats/:id",async (req,res,next)=>{
     
 });
 
+let handleValidation=(err)=>{
+    console.log("Validation error : Submit correct data");
+    return err;
+}
+
+app.use((err,req,res,next)=>{
+    console.log(err.name);
+    if(err.name==="ValidationError"){
+        err=handleValidation(err);
+    }
+    next(err);
+});
 app.use((err,req,res,next)=>{
     let {status=500,message}= err;
     res.status(status).send(message);
